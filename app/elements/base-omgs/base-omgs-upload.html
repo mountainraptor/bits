@@ -18,6 +18,7 @@ limitations under the License.
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../base-auth/base-auth.html">
 
 
@@ -52,6 +53,8 @@ limitations under the License.
 
     </paper-dialog>
 
+    <paper-toast id="toast"></paper-toast>
+
   </template>
   <script>
   (() => {
@@ -62,7 +65,8 @@ limitations under the License.
 
       listeners: {
         'upload-before': '_onUploadBefore',
-        'upload-success': '_onUploadSuccess'
+        'upload-success': '_onUploadSuccess',
+        'upload-error': '_onUploadError'
       },
 
       _onUploadBefore: function(event, detail) {
@@ -78,6 +82,11 @@ limitations under the License.
         if (0 >= this.$.upload.files.length) {
           this.$.dialog.close();
         }
+      },
+
+      _onUploadError: function(e, detail) {
+        this.$.toast.text = 'Error: ' + JSON.parse(detail.xhr.response).error;
+        this.$.toast.show();
       },
 
       open: function() {
